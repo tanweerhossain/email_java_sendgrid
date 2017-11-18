@@ -1,0 +1,32 @@
+{
+  "createdAt": "2017-11-18T14:39:27.780Z",
+  "version": "10.0.11",
+  "kind": "ARC#Project",
+  "requests": [
+    {
+      "type": "saved",
+      "headers": "content-type: application/json\nauthorization: Bearer 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",
+      "method": "POST",
+      "name": "POST",
+      "payload": "{\n      \"personalizations\": [\n        {\n          \"to\": [\n            {\"email\": \"tanweer@myanatomy.in\"}\n          ],\n          \"cc\": [\n            {\"email\": \"pradeep@myanatomy.in\"}\n          ],\n          \"bcc\": [\n            {\"email\": \"tanweerhossainatspacebbsr@gmail.com\"},\n            {\"email\": \"tanweerhossain.1996@gmail.com\"}\n          ],\n          \"subject\": \"Hello, World!\"\n        }\n      ],\n      \"from\": {\"email\": \"tanweer@myanatomy.in\"},\n      \"reply_to\": {\"email\": \"ajeet@myanatomy.in\"},\n      \"subject\": \"Hello, World!\",\n      \"content\": [\n        {\n          \"type\": \"text/html\",\n          \"value\": \"<html><p>Hello,sdf world! from tomcat8</p></html>\"\n        }\n      ]\n    }",
+      "url": "http://localhost:8080/email/jsonparserservlet",
+      "description": "EMAIL CALL THROUGH REST",
+      "updated": 1511015760513,
+      "id": "post/http%3A%2F%2Flocalhost%3A8080%2Femail%2Fjsonparserservlet/post/6bee1b41-cb99-4b1e-94ff-72822067b6d7",
+      "_referenceLegacyProject": "6bee1b41-cb99-4b1e-94ff-72822067b6d7",
+      "kind": "ARC#RequestData",
+      "selected": true
+    }
+  ],
+  "projects": [
+    {
+      "name": "EMAIL CALL THROUGH REST",
+      "order": 0,
+      "created": 1510758621785,
+      "updated": 1511015704590,
+      "description": "EMAIL CALL THROUGH REST",
+      "_referenceId": "6bee1b41-cb99-4b1e-94ff-72822067b6d7",
+      "kind": "ARC#ProjectData"
+    }
+  ]
+}

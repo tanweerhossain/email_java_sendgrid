@@ -1,0 +1,37 @@
+[
+  {
+    //-------------------Done at backend side----------------------
+    "status": true,   
+    "statusDescription": "hello",   
+    "createdBy":"Tanweer",    
+    "createdDate":"02:12:2017",   
+    "sendgridId":"123456789",   
+    //-------------------Done at backend side----------------------
+    "transaction" : {
+      "personalizations": [
+        {
+          "to": [
+            {"email": "tanweer@myanatomy.in"}
+          ],
+          "cc": [
+            {"email": "pradeep@myanatomy.in"}
+          ],
+          "bcc": [
+            {"email": "tanweerhossainatspacebbsr@gmail.com"},
+            {"email": "tanweerhossain.1996@gmail.com"}
+          ],
+          "subject": "Hello, World!"
+        }
+      ],
+      "from": {"email": "tanweer@myanatomy.in"},
+      "reply_to": {"email": "ajeet@myanatomy.in"},
+      "subject": "Hello, World!",
+      "content": [
+        {
+          "type": "text/html",
+          "value": "<html><p>Hello,sdf world!</p></html>"
+        }
+      ]
+    }
+  }
+]
