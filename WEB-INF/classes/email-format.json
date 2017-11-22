@@ -11,20 +11,20 @@
       "personalizations": [
         {
           "to": [
-            {"email": "tanweer@myanatomy.in"}
+             "tanweer@myanatomy.in"
           ],
           "cc": [
-            {"email": "pradeep@myanatomy.in"}
+             "pradeep@myanatomy.in"
           ],
           "bcc": [
-            {"email": "tanweerhossainatspacebbsr@gmail.com"},
-            {"email": "tanweerhossain.1996@gmail.com"}
+             "tanweerhossainatspacebbsr@gmail.com",
+             "tanweerhossain.1996@gmail.com"
           ],
           "subject": "Hello, World!"
         }
       ],
-      "from": {"email": "tanweer@myanatomy.in"},
-      "reply_to": {"email": "ajeet@myanatomy.in"},
+      "from": "tanweer@myanatomy.in",
+      "reply_to": "ajeet@myanatomy.in",
       "subject": "Hello, World!",
       "content": [
         {
@@ -35,3 +35,34 @@
     }
   }
 ]
+
+
+
+
+
+{
+  "personalizations": [
+    {
+      "to": [
+         "tanweer@myanatomy.in"
+      ],
+      "cc": [
+         "tanweerhossainatspacebbsr@hotmail.com"
+      ],
+      "bcc": [
+         "tanweerhossainatspacebbsr@gmail.com",
+         "tanweerhossain.1996@gmail.com"
+      ],
+      "subject": "Mail Send through tomcat8 and sendgrid"
+    }
+  ],
+  "from": "tanweer@myanatomy.in",
+  "reply_to": "ajeet@myanatomy.in",
+  "subject": "Hello, World!",
+  "content": [
+    {
+      "type": "text/html",
+      "value": "<html><p>Hi,<br /><br />Done</p></html>"
+    }
+  ]
+}

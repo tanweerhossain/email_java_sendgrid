@@ -1,68 +1,30 @@
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import javax.activation.MailcapCommandMap;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.JPanel;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.HttpResponse;
-import org.json.JSONArray;
+import javax.servlet.http.*;
+import com.sendgrid.*;
 
-class Transaction {
-    private String from;
-    private String[] to;
-    private String[] bcc;
-    private String[] cc;
-    private String subject;
-    private String textContent;
-    private String htmlContent;
-
-	public String getForm() {
-		return from;
-	}
-	public void setForm(String from) {
-		this.from = from;
-	}
-	public String[] getTo() {
-		return to;
-	}
-	public void setTo(String[] to) {
-		this.to = to;
-	}
-	public String[] getBcc() {
-		return bcc;
-	}
-	public void setBcc(String[] bcc) {
-		this.bcc = bcc;
-	}
-	public String[] getCc() {
-		return cc;
-	}
-	public void setCc(String[] cc) {
-		this.cc = cc;
-	}
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-	public String getTextContent() {
-		return textContent;
-	}
-	public void setTextContent(String textContent) {
-		this.textContent = textContent;
-	}
-	public String getHtmlContent() {
-		return htmlContent;
-	}
-	public void setHtmlContent(String htmlContent) {
-		this.htmlContent = htmlContent;
-	}
+class Content {
+	public String type ;
+	public String value ;
 }
-class Email {
+class Personalizations {
+	public String[] to;
+	public String[] cc;
+	public String[] bcc;
+	public String subject;
+}
+class Transaction {
+	public Personalizations[] personalizations;
+	public String from;
+	public String reply_to;
+  public String subject;
+	public Content[] content;
+}
+class Body {
     private Boolean status;
     private String statusDescription;
     private String createdBy;
@@ -108,49 +70,101 @@ class Email {
 	}
 }
 
+class Status {
+	private Boolean status;
+	private String statusDescription;
+	
+	public Boolean getStatus() {
+		return status;
+	}
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+	public String getStatusDescription() {
+		return statusDescription;
+	}
+	public void setStatusDescription(String statusDescription) {
+		this.statusDescription = statusDescription;
+	}
+}
 public class JsonParserServlet extends HttpServlet {
- 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+		private String SENDGRID_API_KEY = "NULL";
+		
+		private String sendMail(Transaction transaction){
+	
+
+			//Mail sending format calls
+			Mail mail = new Mail();
+			mail.from = new Email(transaction.from);
+			mail.replyTo = new Email(transaction.reply_to);
+			mail.subject = transaction.subject;
+			for( int i = 0 ; i < transaction.content.length ; ++i )
+				mail.addContent( new com.sendgrid.Content( transaction.content[i].type, transaction.content[i].value ));
+			for( int i = 0 ; i < transaction.personalizations.length ; ++i ){
+				Personalization personalization = new Personalization();
+				for( int j = 0 ; j < transaction.personalizations[i].to.length ; ++j )
+					personalization.addTo( new Email(transaction.personalizations[i].to[j]));
+				for( int j = 0 ; j < transaction.personalizations[i].bcc.length ; ++j )
+					personalization.addBcc( new Email(transaction.personalizations[i].bcc[j]));
+				for( int j = 0 ; j < transaction.personalizations[i].cc.length ; ++j )
+					personalization.addCc( new Email(transaction.personalizations[i].cc[j]));
+				personalization.setSubject(transaction.personalizations[i].subject);
+				mail.addPersonalization(personalization);
+			}
+
+
+
+			SendGrid sg = new SendGrid(SENDGRID_API_KEY);
+			Request request = new Request();
+			Response response = new Response();
+			try {
+				request.method = (Method.POST);
+				request.endpoint = ("mail/send");
+				request.body = (mail.build());
+				response = sg.api(request);
+				System.out.println(response.statusCode);
+				System.out.println(response.body);
+				System.out.println(response.headers);
+			} catch (IOException ex) {
+				return ex.toString();
+			}
+			return new Gson().toJson("{ \"status\": "+ response.statusCode + ",\n\"header\": "+ response.headers + ",\n\"message\": " +"Email sent successfully\n }");
+		}
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");       
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        Gson gson = new Gson();
- 
+				Gson gson = new Gson();
+				
+				//Taking sendgrid key value from frontend
+				SENDGRID_API_KEY = request.getHeader("authorization").split(" ")[1];
         try {
-            StringBuilder sb = new StringBuilder();
-            String s;
-            while ((s = request.getReader().readLine()) != null) {
-                sb.append(s);
-            }
-            
-            // Email[] email =  gson.fromJson(sb.toString(), Email[].class);    //========================= Sting --> obj
-            // String responseJson = gson.toJson(email);    //========================= obj --> String
-			// out.print("{\"custom_args\":{\"New Argument 1\":\"New Value 1\",\"activationAttempt\":\"1\",\"customerAccountNumber\":\"[CUSTOMER ACCOUNT NUMBER GOES HERE]\"},\"from\":{\"email\":\"sam.smith@example.com\",\"name\":\"Sam Smith\"},\"attachments\":[{\"name\":\"file1\",\"filename\":\"file1.jpg\",\"content\":\"[BASE64 encoded content block here]\",\"disposition\":\"inline\",\"content_id\":\"ii_139db99fdb5c3704\",\"type\":\"jpg\"}],\"personalizations\":[{\"to\":[{\"email\":\"john.doe@example.com\",\"name\":\"John Doe\"}],\"cc\":[{\"email\":\"jane.doe@example.com\",\"name\":\"Jane Doe\"}],\"bcc\":[{\"email\":\"sam.doe@example.com\",\"name\":\"Sam Doe\"}],\"custom_args\":{\"New Argument 1\":\"New Value 1\",\"activationAttempt\":\"1\",\"customerAccountNumber\":\"[CUSTOMER ACCOUNT NUMBER GOES HERE]\"},\"headers\":{\"X-Accept-Language\":\"en\",\"X-Mailer\":\"MyApp\"},\"send_at\":1409348513,\"substitutions\":{\"type\":\"object\",\"id\":\"substitutions\"},\"subject\":\"Hello, World!\"}],\"subject\":\"Hello, World!\",\"ip_pool_name\":\"[YOUR POOL NAME GOES HERE]\",\"content\":[{\"type\":\"text/html\",\"value\":\"<html><p>Hello, world!</p><img src=[CID GOES HERE]></img></html>\"}],\"headers\":{},\"asm\":{\"groups_to_display\":[1,2,3],\"group_id\":1},\"batch_id\":\"[YOUR BATCH ID GOES HERE]\",\"tracking_settings\":{\"subscription_tracking\":{\"text\":\"If you would like to unsubscribe and stop receiveing these emails <% click here %>.\",\"enable\":true,\"html\":\"If you would like to unsubscribe and stop receiving these emails <% clickhere %>.\",\"substitution_tag\":\"<%click here%>\"},\"open_tracking\":{\"enable\":true,\"substitution_tag\":\"%opentrack\"},\"click_tracking\":{\"enable\":true,\"enable_text\":true},\"ganalytics\":{\"utm_campaign\":\"[NAME OF YOUR REFERRER SOURCE]\",\"enable\":true,\"utm_name\":\"[NAME OF YOUR CAMPAIGN]\",\"utm_term\":\"[IDENTIFY PAID KEYWORDS HERE]\",\"utm_content\":\"[USE THIS SPACE TO DIFFERENTIATE YOUR EMAIL FROM ADS]\",\"utm_medium\":\"[NAME OF YOUR MARKETING MEDIUM e.g. email]\"}},\"mail_settings\":{\"footer\":{\"text\":\"Thanks,/n The SendGrid Team\",\"enable\":true,\"html\":\"<p>Thanks</br>The SendGrid Team</p>\"},\"spam_check\":{\"threshold\":3,\"post_to_url\":\"http://example.com/compliance\",\"enable\":true},\"bypass_list_management\":{\"enable\":true},\"sandbox_mode\":{\"enable\":false},\"bcc\":{\"enable\":true,\"email\":\"ben.doe@example.com\"}},\"reply_to\":{\"email\":\"sam.smith@example.com\",\"name\":\"Sam Smith\"},\"sections\":{\"section\":{\":sectionName2\":\"section 2 text\",\":sectionName1\":\"section 1 text\"}},\"template_id\":\"[YOUR TEMPLATE ID GOES HERE]\",\"categories\":[\"category1\",\"category2\"],\"send_at\":1409348513}");
-			System.out.println(request.getHeader("authorization"));
-			HttpResponse<String> emailResponse = Unirest.post("https://api.sendgrid.com/v3/mail/send")
-				.header("authorization", request.getHeader("authorization"))
-				.header("content-type", "application/json")
-				.body(sb)
-				.asString();
+					StringBuilder sb = new StringBuilder();
+					String s;
 
-			System.out.println(request.getHeader("authorization"));	//======Get Autherization token from this command
-            out.print(sb);
-            out.flush();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Email email = new Email();
-            email.setStatusDescription(ex.toString());
-            email.setStatus(false);
-            out.print(gson.toJson(email));
-            out.flush();
+					//convert json data to string format
+					while ((s = request.getReader().readLine()) != null) {
+							sb.append(s);
+					}
+					
+					//changing json stringify data to object fromat 
+					Transaction object = (Transaction) gson.fromJson(sb.toString(), Transaction.class);
+					
+					//calling mail sending API
+					String responseString = new String(sendMail(object));
+
+					//returning status to frontend
+					out.print(responseString);
+					out.flush();
+        }catch (Exception ex) {
+					ex.printStackTrace();
+					Status status = new Status();
+					status.setStatusDescription(ex.getMessage());
+					status.setStatus(false);
+					out.print(gson.toJson(status));
+					out.flush();
         }
-    }
- 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
     }
 }
 
