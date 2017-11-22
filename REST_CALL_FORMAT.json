@@ -5,7 +5,7 @@
   "requests": [
     {
       "type": "saved",
-      "headers": "content-type: application/json\nauthorization: Bearer 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",
+      "headers": "content-type: application/json\nauthorization: Bearer <---SENDGRID_API_KEY---->",
       "method": "POST",
       "name": "email",
       "payload": "{\n  \"personalizations\": [\n        {\n      \"to\": [\n         \"tanweer@myanatomy.in\"\n          ],\n      \"cc\": [\n         \"pradeep@myanatomy.in\"\n          ],\n      \"bcc\": [\n         \"tanweerhossainatspacebbsr@gmail.com\",\n         \"tanweerhossain.1996@gmail.com\"\n          ],\n      \"subject\": \"Hello, World!\"\n        }\n      ],\n  \"from\": \"tanweer@myanatomy.in\",\n  \"reply_to\": \"ajeet@myanatomy.in\",\n  \"subject\": \"Hello, World!\",\n  \"content\": [\n        {\n      \"type\": \"text/html\",\n      \"value\": \"<html><p>Hello,sdf world!</p></html>\"\n        }\n      ]\n    }",
