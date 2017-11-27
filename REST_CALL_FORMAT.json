@@ -8,7 +8,7 @@
       "headers": "content-type: application/json\nauthorization: Bearer <---SENDGRID_API_KEY---->",
       "method": "POST",
       "name": "email",
-      "payload": "{\n  \"personalizations\": [\n        {\n      \"to\": [\n         \"tanweer@myanatomy.in\"\n          ],\n      \"cc\": [\n         \"pradeep@myanatomy.in\"\n          ],\n      \"bcc\": [\n         \"tanweerhossainatspacebbsr@gmail.com\",\n         \"tanweerhossain.1996@gmail.com\"\n          ],\n      \"subject\": \"Hello, World!\"\n        }\n      ],\n  \"from\": \"tanweer@myanatomy.in\",\n  \"reply_to\": \"ajeet@myanatomy.in\",\n  \"subject\": \"Hello, World!\",\n  \"content\": [\n        {\n      \"type\": \"text/html\",\n      \"value\": \"<html><p>Hello,sdf world!</p></html>\"\n        }\n      ]\n    }",
+      "payload": "{\n  \"personalizations\": [\n        {\n      \"to\": [\n         \"abc@xyz.pq\"\n          ],\n      \"cc\": [\n         \"abc@xyz.pq\"\n          ],\n      \"bcc\": [\n         \"abc@xyz.pq\",\n         \"abc@xyz.pq\"\n          ],\n      \"subject\": \"Hello, World!\"\n        }\n      ],\n  \"from\": \"abc@xyz.pq\",\n  \"reply_to\": \"abc@xyz.pq\",\n  \"subject\": \"Hello, World!\",\n  \"content\": [\n        {\n      \"type\": \"text/html\",\n      \"value\": \"<html><p>Hello,sdf world!</p></html>\"\n        }\n      ]\n    }",
       "url": "http://localhost:8080/email/jsonparserservlet",
       "updated": 1511336579303,
       "id": "email/http%3A%2F%2Flocalhost%3A8080%2Femail%2Fjsonparserservlet/post/6bee1b41-cb99-4b1e-94ff-72822067b6d7",
