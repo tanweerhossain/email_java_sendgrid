@@ -192,6 +192,7 @@ public class JsonParserServlet extends HttpServlet {
 		}
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+				setAccessControlHeaders(response);
         response.setContentType("application/json");       
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
@@ -226,7 +227,19 @@ public class JsonParserServlet extends HttpServlet {
 					out.print(gson.toJson(status));
 					out.flush();
 				}
-    }
+		}
+		protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+						throws ServletException, IOException {
+				setAccessControlHeaders(resp);
+				resp.setStatus(HttpServletResponse.SC_OK);
+		}
+
+		private void setAccessControlHeaders(HttpServletResponse resp) {
+			resp.setHeader("Access-Control-Allow-Origin", "*");
+			resp.setHeader("Access-Control-Allow-Credentials", "true");
+			resp.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE,PUT");
+			resp.setHeader("Access-Control-Allow-Headers", "Authorization,Access-Control-Allow-Headers,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+		}
 }
 
 
